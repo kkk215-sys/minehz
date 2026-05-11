@@ -1,0 +1,1519 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ДЕЛО №</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Special+Elite&family=Courier+Prime:ital,wght@0,400;0,700;1,400&family=IM+Fell+English:ital@0;1&display=swap');
+
+  :root {
+    --paper: #f0e8d0;
+    --paper-dark: #d9cdb0;
+    --paper-aged: #c8b98a;
+    --ink: #1a1209;
+    --ink-faded: #3d2e14;
+    --red: #8b1a1a;
+    --red-stamp: #9e2a2a;
+    --blue-ink: #1a2d5a;
+    --manila: #d4a843;
+    --shadow: rgba(30, 20, 5, 0.35);
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    background-color: #2a1f0e;
+    background-image:
+      repeating-linear-gradient(0deg, transparent, transparent 28px, rgba(0,0,0,0.04) 28px, rgba(0,0,0,0.04) 29px),
+      url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='300' height='300'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='300' height='300' filter='url(%23n)' opacity='0.08'/%3E%3C/svg%3E");
+    font-family: 'Courier Prime', monospace;
+    min-height: 100vh;
+    color: var(--ink);
+    overflow-x: hidden;
+  }
+
+  /* NOISE OVERLAY */
+  body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='200' height='200'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.75' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='200' height='200' filter='url(%23n)' opacity='0.05'/%3E%3C/svg%3E");
+    pointer-events: none;
+    z-index: 1000;
+  }
+
+  /* HEADER */
+  .site-header {
+    background: var(--paper);
+    border-bottom: 3px double var(--ink);
+    padding: 0;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .site-header::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 6px;
+    background: repeating-linear-gradient(90deg, var(--red) 0, var(--red) 20px, var(--paper) 20px, var(--paper) 22px);
+  }
+
+  .header-inner {
+    max-width: 1100px;
+    margin: 0 auto;
+    padding: 40px 40px 28px;
+    display: grid;
+    grid-template-columns: 1fr auto;
+    align-items: end;
+    gap: 20px;
+  }
+
+  .case-label {
+    font-family: 'Special Elite', cursive;
+    font-size: 11px;
+    letter-spacing: 4px;
+    text-transform: uppercase;
+    color: var(--ink-faded);
+    margin-bottom: 8px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+
+  .case-label::before {
+    content: '';
+    display: inline-block;
+    width: 30px;
+    height: 1px;
+    background: var(--ink-faded);
+  }
+
+  .book-title {
+    font-family: 'Special Elite', cursive;
+    font-size: clamp(2.2rem, 5vw, 4rem);
+    line-height: 1.05;
+    color: var(--ink);
+    letter-spacing: -1px;
+    position: relative;
+  }
+
+  .book-title .subtitle {
+    display: block;
+    font-family: 'IM Fell English', serif;
+    font-style: italic;
+    font-size: clamp(1rem, 2vw, 1.5rem);
+    color: var(--ink-faded);
+    letter-spacing: 1px;
+    margin-top: 6px;
+  }
+
+  .header-stamp {
+    text-align: center;
+    position: relative;
+  }
+
+  .stamp-circle {
+    width: 110px;
+    height: 110px;
+    border: 3px solid var(--red-stamp);
+    border-radius: 50%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+    transform: rotate(-12deg);
+    opacity: 0.82;
+  }
+
+  .stamp-circle::before {
+    content: '';
+    position: absolute;
+    inset: 4px;
+    border: 1.5px solid var(--red-stamp);
+    border-radius: 50%;
+  }
+
+  .stamp-text-top {
+    font-family: 'Special Elite', cursive;
+    font-size: 8px;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    color: var(--red-stamp);
+    position: absolute;
+    top: 18px;
+  }
+
+  .stamp-year {
+    font-family: 'Special Elite', cursive;
+    font-size: 22px;
+    color: var(--red-stamp);
+    font-weight: bold;
+    letter-spacing: 2px;
+  }
+
+  .stamp-text-bottom {
+    font-family: 'Special Elite', cursive;
+    font-size: 8px;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: var(--red-stamp);
+    position: absolute;
+    bottom: 18px;
+  }
+
+  /* NAV TABS */
+  .nav-tabs {
+    background: var(--paper-dark);
+    border-bottom: 2px solid var(--ink);
+    padding: 0 40px;
+    max-width: 100%;
+    display: flex;
+    gap: 0;
+    overflow-x: auto;
+  }
+
+  .nav-tabs::-webkit-scrollbar { height: 3px; background: var(--paper-dark); }
+  .nav-tabs::-webkit-scrollbar-thumb { background: var(--ink-faded); }
+
+  .tab-btn {
+    font-family: 'Special Elite', cursive;
+    font-size: 12px;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: var(--ink-faded);
+    padding: 14px 24px;
+    border: none;
+    background: none;
+    cursor: pointer;
+    border-bottom: 3px solid transparent;
+    margin-bottom: -2px;
+    white-space: nowrap;
+    transition: all 0.2s;
+    position: relative;
+  }
+
+  .tab-btn:hover { color: var(--ink); background: rgba(0,0,0,0.04); }
+  .tab-btn.active {
+    color: var(--ink);
+    border-bottom-color: var(--ink);
+    background: var(--paper);
+  }
+
+  /* MAIN CONTENT */
+  .main-wrap {
+    max-width: 1100px;
+    margin: 0 auto;
+    padding: 40px 40px 80px;
+  }
+
+  /* SECTIONS */
+  .section { display: none; animation: fadeIn 0.3s ease; }
+  .section.active { display: block; }
+
+  @keyframes fadeIn {
+    from { opacity: 0; transform: translateY(6px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  /* BOOK READER */
+  .reader-layout {
+    display: grid;
+    grid-template-columns: 260px 1fr;
+    gap: 32px;
+    align-items: start;
+  }
+
+  .chapter-list {
+    background: var(--paper);
+    border: 1px solid var(--paper-aged);
+    box-shadow: 3px 3px 0 var(--shadow), inset 0 0 40px rgba(0,0,0,0.03);
+    position: sticky;
+    top: 20px;
+  }
+
+  .chapter-list-header {
+    background: var(--ink);
+    color: var(--paper);
+    font-family: 'Special Elite', cursive;
+    font-size: 10px;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    padding: 10px 16px;
+  }
+
+  .chapter-item {
+    padding: 12px 16px;
+    border-bottom: 1px solid var(--paper-dark);
+    cursor: pointer;
+    transition: background 0.15s;
+    display: flex;
+    align-items: flex-start;
+    gap: 10px;
+  }
+
+  .chapter-item:hover { background: rgba(0,0,0,0.04); }
+  .chapter-item.active { background: var(--paper-dark); }
+
+  .chapter-num {
+    font-family: 'Courier Prime', monospace;
+    font-size: 10px;
+    color: var(--ink-faded);
+    min-width: 24px;
+    padding-top: 2px;
+  }
+
+  .chapter-title {
+    font-family: 'IM Fell English', serif;
+    font-size: 14px;
+    color: var(--ink);
+    line-height: 1.3;
+  }
+
+  .chapter-item.locked .chapter-title { color: var(--paper-aged); }
+  .chapter-item.locked::after {
+    content: '🔒';
+    font-size: 10px;
+    margin-left: auto;
+    opacity: 0.5;
+  }
+
+  /* BOOK PAGE */
+  .book-page {
+    background: var(--paper);
+    border: 1px solid var(--paper-aged);
+    box-shadow: 4px 4px 0 var(--shadow), inset 0 0 60px rgba(0,0,0,0.04);
+    min-height: 600px;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .book-page::before {
+    content: '';
+    position: absolute;
+    left: 60px;
+    top: 0;
+    bottom: 0;
+    width: 1px;
+    background: rgba(180, 100, 100, 0.3);
+  }
+
+  .page-header-bar {
+    border-bottom: 1px solid var(--paper-aged);
+    padding: 14px 40px 14px 80px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+
+  .page-chapter-label {
+    font-family: 'Special Elite', cursive;
+    font-size: 10px;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    color: var(--ink-faded);
+  }
+
+  .page-number {
+    font-family: 'Courier Prime', monospace;
+    font-size: 11px;
+    color: var(--ink-faded);
+  }
+
+  .page-body {
+    padding: 36px 40px 48px 80px;
+  }
+
+  .page-chapter-title {
+    font-family: 'IM Fell English', serif;
+    font-size: 28px;
+    color: var(--ink);
+    margin-bottom: 8px;
+    line-height: 1.2;
+  }
+
+  .page-chapter-epigraph {
+    font-family: 'IM Fell English', serif;
+    font-style: italic;
+    font-size: 14px;
+    color: var(--ink-faded);
+    border-left: 2px solid var(--paper-aged);
+    padding-left: 16px;
+    margin: 16px 0 28px;
+    line-height: 1.6;
+  }
+
+  .page-text {
+    font-family: 'IM Fell English', serif;
+    font-size: 17px;
+    line-height: 1.85;
+    color: var(--ink);
+    text-align: justify;
+    hyphens: auto;
+  }
+
+  .page-text p { margin-bottom: 1.2em; }
+
+  .page-text p:first-of-type::first-letter {
+    font-family: 'Special Elite', cursive;
+    font-size: 4.5em;
+    float: left;
+    line-height: 0.75;
+    margin: 6px 8px -4px 0;
+    color: var(--ink);
+  }
+
+  .page-nav {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 20px 40px 20px 80px;
+    border-top: 1px solid var(--paper-aged);
+  }
+
+  .page-btn {
+    font-family: 'Special Elite', cursive;
+    font-size: 11px;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: var(--ink);
+    background: none;
+    border: 1px solid var(--ink);
+    padding: 8px 16px;
+    cursor: pointer;
+    transition: all 0.15s;
+  }
+
+  .page-btn:hover { background: var(--ink); color: var(--paper); }
+  .page-btn:disabled { opacity: 0.3; cursor: not-allowed; }
+  .page-btn:disabled:hover { background: none; color: var(--ink); }
+
+  /* DOSSIER GRID */
+  .dossier-header {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+    margin-bottom: 32px;
+  }
+
+  .dossier-title {
+    font-family: 'Special Elite', cursive;
+    font-size: 22px;
+    color: var(--paper);
+    letter-spacing: 2px;
+    text-transform: uppercase;
+  }
+
+  .dossier-count {
+    font-family: 'Courier Prime', monospace;
+    font-size: 12px;
+    color: var(--paper-aged);
+    background: rgba(255,255,255,0.07);
+    padding: 4px 10px;
+    border: 1px solid rgba(255,255,255,0.15);
+  }
+
+  .dossier-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+    gap: 24px;
+  }
+
+  .dossier-card {
+    background: var(--paper);
+    border: 1px solid var(--paper-aged);
+    box-shadow: 4px 4px 0 var(--shadow);
+    cursor: pointer;
+    transition: transform 0.15s, box-shadow 0.15s;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .dossier-card::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 3px;
+    background: var(--manila);
+  }
+
+  .dossier-card:hover {
+    transform: translate(-2px, -2px);
+    box-shadow: 6px 6px 0 var(--shadow);
+  }
+
+  .dossier-card.locked {
+    cursor: default;
+    opacity: 0.55;
+    filter: grayscale(0.4);
+  }
+  .dossier-card.locked:hover { transform: none; box-shadow: 4px 4px 0 var(--shadow); }
+
+  .dossier-card-top {
+    background: var(--paper-dark);
+    padding: 12px 16px;
+    border-bottom: 1px solid var(--paper-aged);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+
+  .dossier-type {
+    font-family: 'Special Elite', cursive;
+    font-size: 9px;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    color: var(--ink-faded);
+  }
+
+  .dossier-id {
+    font-family: 'Courier Prime', monospace;
+    font-size: 10px;
+    color: var(--ink-faded);
+  }
+
+  .dossier-photo-area {
+    height: 110px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: var(--paper);
+    border-bottom: 1px solid var(--paper-dark);
+    position: relative;
+    overflow: hidden;
+  }
+
+  .dossier-avatar {
+    width: 70px;
+    height: 90px;
+    background: var(--paper-dark);
+    border: 1px solid var(--paper-aged);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 32px;
+    position: relative;
+  }
+
+  .dossier-avatar::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(135deg, rgba(255,255,255,0.15) 0%, transparent 60%);
+  }
+
+  .dossier-body { padding: 16px; }
+
+  .dossier-name {
+    font-family: 'IM Fell English', serif;
+    font-size: 18px;
+    color: var(--ink);
+    margin-bottom: 4px;
+  }
+
+  .dossier-role {
+    font-family: 'Courier Prime', monospace;
+    font-size: 11px;
+    color: var(--ink-faded);
+    margin-bottom: 12px;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+  }
+
+  .dossier-snippet {
+    font-family: 'IM Fell English', serif;
+    font-size: 13px;
+    color: var(--ink-faded);
+    line-height: 1.5;
+    border-top: 1px solid var(--paper-dark);
+    padding-top: 10px;
+  }
+
+  .locked-overlay {
+    position: absolute;
+    inset: 0;
+    background: repeating-linear-gradient(
+      45deg,
+      transparent,
+      transparent 8px,
+      rgba(0,0,0,0.04) 8px,
+      rgba(0,0,0,0.04) 9px
+    );
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .locked-badge {
+    background: var(--ink);
+    color: var(--paper);
+    font-family: 'Special Elite', cursive;
+    font-size: 9px;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    padding: 6px 14px;
+    transform: rotate(-4deg);
+    box-shadow: 2px 2px 0 var(--shadow);
+  }
+
+  /* UNLOCK PROGRESS */
+  .unlock-bar-wrap {
+    background: var(--paper);
+    border: 1px solid var(--paper-aged);
+    padding: 16px 20px;
+    margin-bottom: 28px;
+    box-shadow: 3px 3px 0 var(--shadow);
+    display: flex;
+    align-items: center;
+    gap: 20px;
+  }
+
+  .unlock-label {
+    font-family: 'Special Elite', cursive;
+    font-size: 10px;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: var(--ink-faded);
+    white-space: nowrap;
+  }
+
+  .unlock-bar {
+    flex: 1;
+    height: 6px;
+    background: var(--paper-dark);
+    border: 1px solid var(--paper-aged);
+  }
+
+  .unlock-fill {
+    height: 100%;
+    background: var(--ink);
+    transition: width 0.5s ease;
+  }
+
+  .unlock-text {
+    font-family: 'Courier Prime', monospace;
+    font-size: 11px;
+    color: var(--ink-faded);
+    white-space: nowrap;
+  }
+
+  /* CHAPTER UNLOCK BANNER */
+  .unlock-chapter-control {
+    display: flex;
+    gap: 8px;
+    flex-wrap: wrap;
+    margin-bottom: 24px;
+  }
+
+  .unlock-chip {
+    font-family: 'Special Elite', cursive;
+    font-size: 9px;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    padding: 6px 12px;
+    border: 1px solid var(--paper-aged);
+    background: var(--paper);
+    color: var(--ink-faded);
+    cursor: pointer;
+    transition: all 0.15s;
+  }
+
+  .unlock-chip:hover, .unlock-chip.done { 
+    background: var(--ink); 
+    color: var(--paper); 
+    border-color: var(--ink);
+  }
+
+  /* MODAL */
+  .modal-overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(20, 12, 4, 0.75);
+    z-index: 500;
+    display: none;
+    align-items: center;
+    justify-content: center;
+    padding: 24px;
+  }
+
+  .modal-overlay.open { display: flex; }
+
+  .modal {
+    background: var(--paper);
+    max-width: 680px;
+    width: 100%;
+    max-height: 80vh;
+    overflow-y: auto;
+    border: 1px solid var(--paper-aged);
+    box-shadow: 8px 8px 0 rgba(20,12,4,0.5);
+    position: relative;
+  }
+
+  .modal-header {
+    background: var(--ink);
+    padding: 16px 24px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    position: sticky;
+    top: 0;
+  }
+
+  .modal-title {
+    font-family: 'Special Elite', cursive;
+    font-size: 13px;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    color: var(--paper);
+  }
+
+  .modal-close {
+    background: none;
+    border: 1px solid rgba(255,255,255,0.3);
+    color: var(--paper);
+    font-family: 'Courier Prime', monospace;
+    font-size: 14px;
+    width: 28px;
+    height: 28px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: background 0.15s;
+  }
+
+  .modal-close:hover { background: rgba(255,255,255,0.15); }
+
+  .modal-body { padding: 28px 32px 36px; }
+
+  .modal-dossier-top {
+    display: flex;
+    gap: 24px;
+    margin-bottom: 24px;
+    padding-bottom: 20px;
+    border-bottom: 1px solid var(--paper-aged);
+  }
+
+  .modal-avatar {
+    width: 90px;
+    height: 110px;
+    background: var(--paper-dark);
+    border: 1px solid var(--paper-aged);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 42px;
+    flex-shrink: 0;
+  }
+
+  .modal-info { flex: 1; }
+
+  .modal-name {
+    font-family: 'IM Fell English', serif;
+    font-size: 26px;
+    color: var(--ink);
+    margin-bottom: 6px;
+  }
+
+  .modal-role {
+    font-family: 'Courier Prime', monospace;
+    font-size: 11px;
+    color: var(--ink-faded);
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    margin-bottom: 14px;
+  }
+
+  .modal-tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+  }
+
+  .modal-tag {
+    font-family: 'Courier Prime', monospace;
+    font-size: 10px;
+    color: var(--ink-faded);
+    border: 1px solid var(--paper-aged);
+    padding: 3px 8px;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+  }
+
+  .modal-field {
+    margin-bottom: 18px;
+  }
+
+  .modal-field-label {
+    font-family: 'Special Elite', cursive;
+    font-size: 9px;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    color: var(--ink-faded);
+    margin-bottom: 6px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .modal-field-label::after {
+    content: '';
+    flex: 1;
+    height: 1px;
+    background: var(--paper-aged);
+  }
+
+  .modal-field-value {
+    font-family: 'IM Fell English', serif;
+    font-size: 15px;
+    color: var(--ink);
+    line-height: 1.65;
+  }
+
+  .modal-redacted {
+    background: var(--ink);
+    color: var(--ink);
+    user-select: none;
+    font-size: 13px;
+  }
+
+  /* ABOUT */
+  .about-sheet {
+    background: var(--paper);
+    border: 1px solid var(--paper-aged);
+    box-shadow: 4px 4px 0 var(--shadow);
+    max-width: 700px;
+    margin: 0 auto;
+    padding: 48px 56px;
+    position: relative;
+  }
+
+  .about-sheet::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 70px;
+    bottom: 0;
+    width: 1px;
+    background: rgba(180,100,100,0.25);
+  }
+
+  .about-title {
+    font-family: 'Special Elite', cursive;
+    font-size: 26px;
+    color: var(--ink);
+    letter-spacing: 1px;
+    margin-bottom: 4px;
+  }
+
+  .about-divider {
+    width: 60px;
+    height: 2px;
+    background: var(--ink);
+    margin: 14px 0 24px;
+  }
+
+  .about-text {
+    font-family: 'IM Fell English', serif;
+    font-size: 17px;
+    line-height: 1.8;
+    color: var(--ink);
+    margin-bottom: 1.3em;
+  }
+
+  .about-meta {
+    margin-top: 36px;
+    padding-top: 20px;
+    border-top: 1px solid var(--paper-aged);
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 16px 32px;
+  }
+
+  .about-meta-item { }
+
+  .about-meta-label {
+    font-family: 'Special Elite', cursive;
+    font-size: 9px;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    color: var(--ink-faded);
+    margin-bottom: 4px;
+  }
+
+  .about-meta-value {
+    font-family: 'Courier Prime', monospace;
+    font-size: 13px;
+    color: var(--ink);
+  }
+
+  /* PROGRESS SECTION */
+  .progress-section { margin-top: 36px; }
+
+  .progress-title {
+    font-family: 'Special Elite', cursive;
+    font-size: 11px;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    color: var(--paper);
+    margin-bottom: 16px;
+  }
+
+  .progress-chapter-list {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+  }
+
+  .progress-chapter-item {
+    background: var(--paper);
+    border: 1px solid var(--paper-aged);
+    padding: 12px 16px;
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    cursor: pointer;
+    transition: all 0.15s;
+    box-shadow: 2px 2px 0 var(--shadow);
+  }
+
+  .progress-chapter-item:hover { transform: translate(-1px,-1px); box-shadow: 3px 3px 0 var(--shadow); }
+
+  .progress-chapter-item.read { border-left: 3px solid var(--ink); }
+
+  .progress-chk {
+    width: 18px;
+    height: 18px;
+    border: 1.5px solid var(--paper-aged);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    font-size: 11px;
+  }
+
+  .progress-chapter-item.read .progress-chk {
+    background: var(--ink);
+    color: var(--paper);
+    border-color: var(--ink);
+  }
+
+  .progress-ch-name {
+    font-family: 'IM Fell English', serif;
+    font-size: 15px;
+    color: var(--ink);
+    flex: 1;
+  }
+
+  .progress-ch-num {
+    font-family: 'Courier Prime', monospace;
+    font-size: 10px;
+    color: var(--ink-faded);
+  }
+
+  /* RESPONSIVE */
+  @media (max-width: 700px) {
+    .header-inner { grid-template-columns: 1fr; padding: 20px 16px 16px; }
+    .header-stamp { display: none; }
+    .case-label { font-size: 9px; }
+    .book-title { font-size: 1.7rem; }
+
+    .main-wrap { padding: 16px 12px 60px; }
+
+    .reader-layout { grid-template-columns: 1fr; gap: 16px; }
+    .chapter-list { position: static; }
+
+    .book-page::before { display: none; }
+    .page-header-bar { padding: 10px 14px; }
+    .page-body { padding: 20px 14px 28px; }
+    .page-chapter-title { font-size: 20px; }
+    .page-text { font-size: 15px; line-height: 1.75; text-align: left; }
+    .page-text p:first-of-type::first-letter { font-size: 3.2em; }
+    .page-nav { padding: 14px; gap: 8px; }
+    .page-btn { font-size: 10px; padding: 7px 10px; }
+
+    .dossier-grid { grid-template-columns: 1fr 1fr; gap: 12px; }
+    .dossier-name { font-size: 14px; }
+
+    .about-sheet { padding: 24px 16px; }
+    .about-sheet::before { display: none; }
+    .about-meta { grid-template-columns: 1fr; }
+
+    .modal-dossier-top { flex-direction: column; }
+    .modal-body { padding: 20px 16px 28px; }
+
+    .nav-tabs { padding: 0 8px; }
+    .tab-btn { padding: 12px 14px; font-size: 11px; }
+
+    .unlock-bar-wrap { flex-wrap: wrap; gap: 8px; }
+
+    .dossier-header { flex-wrap: wrap; gap: 8px; }
+    .dossier-title { font-size: 16px; }
+  }
+
+  @media (max-width: 380px) {
+    .dossier-grid { grid-template-columns: 1fr; }
+  }
+</style>
+</head>
+<body>
+
+<!-- HEADER -->
+<header class="site-header">
+  <div class="header-inner">
+    <div>
+      <div class="case-label">Дело открыто &nbsp;·&nbsp; Ванкувер, BC &nbsp;·&nbsp; 1994</div>
+      <h1 class="book-title">
+        Тихая улика
+        <span class="subtitle">Роман &nbsp;·&nbsp; Архив материалов</span>
+      </h1>
+    </div>
+    <div class="header-stamp">
+      <div class="stamp-circle">
+        <span class="stamp-text-top">Canada</span>
+        <span class="stamp-year">1994</span>
+        <span class="stamp-text-bottom">Конфиденциально</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- NAV -->
+  <nav class="nav-tabs">
+    <button class="tab-btn active" onclick="switchTab('reader', this)">📖 &nbsp;Читать</button>
+    <button class="tab-btn" onclick="switchTab('dossier', this)">🗂 &nbsp;Досье</button>
+    <button class="tab-btn" onclick="switchTab('progress', this)">📋 &nbsp;Прогресс</button>
+    <button class="tab-btn" onclick="switchTab('about', this)">ℹ &nbsp;О книге</button>
+  </nav>
+</header>
+
+<!-- MAIN -->
+<div class="main-wrap">
+
+  <!-- ======= READER ======= -->
+  <section class="section active" id="sec-reader">
+    <div class="reader-layout">
+      <!-- Chapter list -->
+      <aside class="chapter-list">
+        <div class="chapter-list-header">Содержание</div>
+        <div id="chapter-nav"></div>
+      </aside>
+
+      <!-- Book page -->
+      <div>
+        <div class="book-page">
+          <div class="page-header-bar">
+            <span class="page-chapter-label" id="page-label">Глава I</span>
+            <span class="page-number" id="page-num">стр. 1</span>
+          </div>
+          <div class="page-body">
+            <h2 class="page-chapter-title" id="chap-title"></h2>
+            <blockquote class="page-chapter-epigraph" id="chap-epigraph"></blockquote>
+            <div class="page-text" id="chap-text"></div>
+          </div>
+          <div class="page-nav">
+            <button class="page-btn" id="btn-prev" onclick="changeChapter(-1)">← Назад</button>
+            <button class="page-btn" id="btn-mark" onclick="markRead()">Отметить прочитанным</button>
+            <button class="page-btn" id="btn-next" onclick="changeChapter(1)">Далее →</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ======= DOSSIER ======= -->
+  <section class="section" id="sec-dossier">
+    <div class="dossier-header">
+      <h2 class="dossier-title">Архив досье</h2>
+      <span class="dossier-count" id="dossier-count">0 / 0 разблокировано</span>
+    </div>
+
+    <div class="unlock-bar-wrap">
+      <span class="unlock-label">Прогресс разблокировки</span>
+      <div class="unlock-bar"><div class="unlock-fill" id="unlock-fill" style="width:0%"></div></div>
+      <span class="unlock-text" id="unlock-text">0%</span>
+    </div>
+
+    <div class="dossier-grid" id="dossier-grid"></div>
+  </section>
+
+  <!-- ======= PROGRESS ======= -->
+  <section class="section" id="sec-progress">
+    <div class="progress-section">
+      <div class="progress-title">Журнал чтения</div>
+      <div class="progress-chapter-list" id="progress-list"></div>
+    </div>
+  </section>
+
+  <!-- ======= ABOUT ======= -->
+  <section class="section" id="sec-about">
+    <div class="about-sheet">
+      <h2 class="about-title">О книге</h2>
+      <div class="about-divider"></div>
+      <p class="about-text">
+        Ванкувер, 1994 год. Серия странных исчезновений на окраинах города — дела, которые закрывают слишком быстро. Детектив Элис Коуэн берётся за очередное «самоубийство», не веря ни единой строчке протокола.
+      </p>
+      <p class="about-text">
+        Этот сайт — интерактивный архив книги. Читайте главы в разделе «Читать», а по мере продвижения открывайте досье: личные дела персонажей, улики, газетные вырезки и засекреченные документы.
+      </p>
+      <p class="about-text">
+        Чем дальше — тем больше файлов станет доступно.
+      </p>
+      <div class="about-meta">
+        <div class="about-meta-item">
+          <div class="about-meta-label">Жанр</div>
+          <div class="about-meta-value">Детектив / Нуар</div>
+        </div>
+        <div class="about-meta-item">
+          <div class="about-meta-label">Действие</div>
+          <div class="about-meta-value">Ванкувер, BC, 1994</div>
+        </div>
+        <div class="about-meta-item">
+          <div class="about-meta-label">Глав</div>
+          <div class="about-meta-value" id="about-chap-count">—</div>
+        </div>
+        <div class="about-meta-item">
+          <div class="about-meta-label">Досье в архиве</div>
+          <div class="about-meta-value" id="about-dos-count">—</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+</div>
+
+<!-- MODAL -->
+<div class="modal-overlay" id="modal" onclick="closeModal(event)">
+  <div class="modal">
+    <div class="modal-header">
+      <span class="modal-title" id="modal-title">Досье</span>
+      <button class="modal-close" onclick="closeModalDirect()">✕</button>
+    </div>
+    <div class="modal-body" id="modal-body"></div>
+  </div>
+</div>
+
+<script>
+// ============================================================
+// DATA
+// ============================================================
+
+const CHAPTERS = [
+  {
+    id: 1,
+    title: "Дождь на Гастингс-стрит",
+    epigraph: "«Ванкувер умеет молчать. Особенно когда есть что скрывать.»",
+    pageNum: 1,
+    text: `<p>Дождь начался в половине третьего и не собирался останавливаться. Детектив Элис Коуэн стояла у окна участка и смотрела, как вода стекает по стеклу, превращая фонари в размытые пятна янтаря.</p>
+    <p>На столе лежала папка. Тонкая, почти пустая. «Макс Пирс, 34 года, найден в Бурнаби 12 октября. Заключение: несчастный случай.» Подпись — Кронин. Тот же Кронин, что закрыл дело Яников в прошлом месяце. И дело Фостер в сентябре.</p>
+    <p>Элис открыла папку в третий раз за вечер, будто надеясь, что там что-то изменится. Ничего не изменилось. Только фотография — Пирс, улыбающийся, с удочкой где-то у реки. Живой. А потом — протокол осмотра места происшествия, написанный так, словно его составляли на ходу, на колене.</p>
+    <p>— Коуэн, — окликнул её сержант Батт с порога. — Домой не собираешься?</p>
+    <p>— Пирс работал в порту, — сказала она, не оборачиваясь. — Три года без прогулов. Потом две недели отсутствия — и его находят в Бурнаби. Далековато от его квартиры в Ист-Сайде.</p>
+    <p>— Элис. Это уже закрытое дело.</p>
+    <p>— Знаю, — она закрыла папку и наконец повернулась. — Но кто-то же открывал его первым.»</p>`,
+    unlocked: true,
+    read: false,
+    unlocksDossier: []
+  },
+  {
+    id: 2,
+    title: "Порт и его тени",
+    epigraph: "«У каждого дока есть своя история. Большинство из них никогда не всплывают.»",
+    pageNum: 18,
+    text: `<p>Терминал № 7 пах соляркой, ржавчиной и чем-то ещё — тем неуловимым запахом, который бывает только у мест, где люди проводят слишком много времени и говорят слишком мало.</p>
+    <p>Стивен Ваара встретил Коуэн у ворот. Невысокий, широкоплечий, с руками докера и глазами человека, который привык считать слова. Он был бригадиром смены, в которой работал Пирс.</p>
+    <p>— Макс был хорошим человеком, — сказал он, когда они шли вдоль причала. — Тихим. Не лез не в своё дело.</p>
+    <p>— А в чьё дело лезть не стоило?</p>
+    <p>Ваара помолчал. Где-то на воде гудел буксир.</p>
+    <p>— Вы знаете, сколько грузов идёт через этот порт за сутки? — сказал он наконец. — Тысячи контейнеров. Никто не проверяет каждый. Никто и не должен.</p>
+    <p>— Но Пирс проверял?</p>
+    <p>Он остановился. Посмотрел на воду.</p>
+    <p>— Пирс ушёл домой в ту пятницу в семь вечера. Я сам видел, как он уходил. Больше я его не видел.</p>`,
+    unlocked: true,
+    read: false,
+    unlocksDossier: ['dos-vaara']
+  },
+  {
+    id: 3,
+    title: "Миссис Пирс не плачет",
+    epigraph: "«Некоторые люди уже потратили все слёзы задолго до похорон.»",
+    pageNum: 31,
+    text: `<p>Квартира на Коммершл-драйв выглядела так, словно время в ней остановилось где-то в середине октября и так и не двинулось дальше. На холодильнике — магниты с морскими пейзажами. На подоконнике — засохший базилик в горшке.</p>
+    <p>Линда Пирс сидела за кухонным столом и держала чашку чая обеими руками, хотя чай давно остыл. Ей было, наверное, тридцать, но что-то в её взгляде казалось значительно старше.</p>
+    <p>— Он позвонил мне из порта, — сказала она. — В пятницу, около шести. Сказал, что задержится. Сказал: «не жди с ужином». Это были его последние слова, которые я слышала.</p>
+    <p>— Он казался взволнованным?</p>
+    <p>— Макс никогда не казался взволнованным. Он умел не показывать. — Она сделала глоток холодного чая. — Но я слышала. По тому, как он говорил. Короткими предложениями. Как будто рядом кто-то был.</p>
+    <p>— Вы рассказывали это следователям?</p>
+    <p>Линда посмотрела в окно.</p>
+    <p>— Им не интересно было слушать.</p>`,
+    unlocked: false,
+    read: false,
+    unlocksDossier: ['dos-linda', 'dos-max']
+  },
+  {
+    id: 4,
+    title: "Папка 1994-117",
+    epigraph: "«В архивах хранится не история — в них хранятся удобные версии истории.»",
+    pageNum: 44,
+    text: `<p>Архивный отдел располагался в подвале. Элис спустилась по лестнице и оказалась в длинном коридоре под флуоресцентными лампами, одна из которых мигала с равномерностью метронома.</p>
+    <p>Архивариус — пожилой мужчина с именным бейджем «Г. Нэш» — посмотрел на неё поверх очков.</p>
+    <p>— Дело 1994-117 передано в ведомственный архив в ноябре, — сказал он, не дожидаясь вопроса. — Обычно это занимает три месяца. Это заняло две недели.</p>
+    <p>— Кто подписал передачу?</p>
+    <p>— Инспектор Кронин. — Пауза. — Он звонил на прошлой неделе. Спрашивал, запрашивал ли кто-нибудь это дело.</p>
+    <p>Элис положила удостоверение на стойку.</p>
+    <p>— Теперь запрашиваю я.</p>
+    <p>Нэш посмотрел на удостоверение. Потом на неё. Потом встал и скрылся в глубине стеллажей. Лампа мигала. Где-то капала вода.</p>
+    <p>Через десять минут он вернулся с папкой — тонкой, почти такой же пустой, как та, с которой всё началось. Но не совсем пустой. Внутри лежал один лист — распечатка таможенного запроса. С именем, которое Элис не ожидала увидеть.</p>`,
+    unlocked: false,
+    read: false,
+    unlocksDossier: ['dos-kronin']
+  },
+  {
+    id: 5,
+    title: "Имя в запросе",
+    epigraph: "«Совпадений не бывает. Бывают только вещи, которые мы ещё не объяснили.»",
+    pageNum: 59,
+    text: `<p>Имя было «Коллинз». Просто Коллинз — без инициалов, без должности. Таможенный запрос на контейнер, который прибыл в порт 8 октября. За четыре дня до того, как Пирс не вышел на работу.</p>
+    <p>Элис провела вечер в библиотеке, листая подшивки «Ванкувер Сан» за последние два года. «Коллинз» появлялся дважды: в светской хронике — как участник благотворительного ужина в отеле «Харбор Гранд» — и в деловом разделе, в коротком материале о новых инвесторах в прибрежную недвижимость.</p>
+    <p>Фотографии не было ни разу.</p>
+    <p>Она позвонила Батту из телефонной будки на углу Бродвея.</p>
+    <p>— Мне нужна помощь. Неофициальная.</p>
+    <p>— Элис...<br>— Я знаю, что ты скажешь.<br>— Ты не знаешь, что я скажу.<br>— Что это опасно.<br>— Нет. Я хотел сказать: позвони завтра. Сегодня за мной следят.</p>
+    <p>Трубку положили. Элис смотрела на дождь сквозь стекло будки и думала о том, что в Ванкувере в ноябре почти никогда не бывает звёздного неба.</p>`,
+    unlocked: false,
+    read: false,
+    unlocksDossier: ['dos-collins', 'dos-butt']
+  }
+];
+
+const DOSSIERS = [
+  {
+    id: 'dos-vaara',
+    type: 'Персонаж',
+    displayId: '#P-002',
+    name: 'Стивен Ваара',
+    role: 'Бригадир смены, Терминал №7',
+    emoji: '👷',
+    tags: ['Порт Ванкувера', 'Свидетель', 'Финское происхождение'],
+    unlocksAfterChapter: 2,
+    fields: [
+      { label: 'Место работы', value: 'Порт Ванкувера, Терминал №7. Бригадир с 1989 г.' },
+      { label: 'Связь с делом', value: 'Последний, кто видел Макса Пирса живым на территории порта в пятницу вечером.' },
+      { label: 'Характеристика', value: 'Лаконичен. Избегает прямых ответов. Демонстрирует лояльность начальству.' },
+      { label: 'Примечание следствия', value: 'Показания не противоречат официальной версии. Однако реакция на вопрос о «грузах» требует проверки.' },
+    ]
+  },
+  {
+    id: 'dos-linda',
+    type: 'Персонаж',
+    displayId: '#P-003',
+    name: 'Линда Пирс',
+    role: 'Жена Макса Пирса',
+    emoji: '👩',
+    tags: ['Вдова', 'Ключевой свидетель', 'Коммершл-драйв'],
+    unlocksAfterChapter: 3,
+    fields: [
+      { label: 'Место проживания', value: 'Коммершл-драйв, Ист-Ванкувер. Проживает одна с момента смерти мужа.' },
+      { label: 'Последний разговор', value: 'Пирс позвонил жене около 18:00 пятницы. По её оценке — говорил коротко, словно рядом кто-то находился.' },
+      { label: 'Отношение следствия', value: 'Официально показания приняты, однако деталь о «присутствии третьего лица» в протокол не внесена.' },
+      { label: 'Психологическое состояние', value: '██████████████ [данные изъяты из дела 1994-117]' },
+    ]
+  },
+  {
+    id: 'dos-max',
+    type: 'Жертва',
+    displayId: '#V-001',
+    name: 'Макс Пирс',
+    role: 'Портовый рабочий',
+    emoji: '🪪',
+    tags: ['Терминал №7', 'Найден в Бурнаби', '34 года'],
+    unlocksAfterChapter: 3,
+    fields: [
+      { label: 'Дата рождения', value: '14 марта 1960, Принс-Джордж, BC' },
+      { label: 'Место работы', value: 'Порт Ванкувера, Терминал №7. Рабочий. Стаж — 3 года без нареканий.' },
+      { label: 'Официальное заключение', value: 'Несчастный случай. Подписал: инсп. Дж. Кронин, 15.10.1994.' },
+      { label: 'Аномалии дела', value: 'Тело обнаружено в Бурнаби — в 14 км от места жительства и в 9 км от порта. Обстоятельства перемещения не установлены.' },
+    ]
+  },
+  {
+    id: 'dos-kronin',
+    type: 'Должностное лицо',
+    displayId: '#O-001',
+    name: 'Инспектор Дж. Кронин',
+    role: 'Следователь полиции Ванкувера',
+    emoji: '🕵️',
+    tags: ['VPD', 'Закрыл 3 дела подряд', 'Под вопросом'],
+    unlocksAfterChapter: 4,
+    fields: [
+      { label: 'Должность', value: 'Инспектор, отдел уголовных расследований, VPD. Стаж 18 лет.' },
+      { label: 'Закрытые дела (осень 1994)', value: 'Дело Яников (сентябрь), дело Фостер (сентябрь), дело Пирса (октябрь). Все — несчастные случаи или суицид.' },
+      { label: 'Активность по делу', value: 'Запрашивал архив в ноябре — интересовался, обращался ли кто-нибудь к папке 1994-117.' },
+      { label: 'Связи', value: '██████ [установить связь с именем «Коллинз» — приоритет]' },
+    ]
+  },
+  {
+    id: 'dos-collins',
+    type: 'Неустановленное лицо',
+    displayId: '#U-001',
+    name: '«Коллинз»',
+    role: 'Неизвестно',
+    emoji: '❓',
+    tags: ['Инвестор?', 'Таможенный запрос', 'Фото отсутствует'],
+    unlocksAfterChapter: 5,
+    fields: [
+      { label: 'Источник', value: 'Имя фигурирует в таможенном запросе на контейнер, прибывший 08.10.1994 — за 4 дня до исчезновения Пирса.' },
+      { label: 'Публичные упоминания', value: 'Участник благотворительного ужина («Харбор Гранд», 1993). Короткое упоминание как «нового инвестора в прибрежную недвижимость» (Vancouver Sun, апрель 1994).' },
+      { label: 'Фото / личность', value: 'Фотоматериалы отсутствуют. Личность официально не установлена.' },
+      { label: 'Гипотезы', value: '██████████████████████████████████████' },
+    ]
+  },
+  {
+    id: 'dos-butt',
+    type: 'Персонаж',
+    displayId: '#P-004',
+    name: 'Сержант Батт',
+    role: 'Сержант полиции, коллега Коуэн',
+    emoji: '👮',
+    tags: ['VPD', 'Союзник?', 'Под наблюдением'],
+    unlocksAfterChapter: 5,
+    fields: [
+      { label: 'Должность', value: 'Сержант, участок Восточного Ванкувера. Коллега и — предположительно — союзник Элис Коуэн.' },
+      { label: 'Последний контакт', value: 'Телефонный звонок, ноябрь 1994. Сообщил, что за ним ведётся наблюдение. Попросил перезвонить завтра.' },
+      { label: 'Статус', value: '— Не установлен —' },
+    ]
+  },
+];
+
+// ============================================================
+// STATE
+// ============================================================
+let state = {
+  currentChapter: 0,
+  readChapters: JSON.parse(localStorage.getItem('readChapters') || '[]'),
+};
+
+function isRead(chapId) { return state.readChapters.includes(chapId); }
+function maxReadChapter() { return state.readChapters.length > 0 ? Math.max(...state.readChapters) : 0; }
+
+// ============================================================
+// INIT
+// ============================================================
+function init() {
+  // Unlock chapters based on read progress
+  CHAPTERS.forEach((ch, i) => {
+    if (i === 0) ch.unlocked = true;
+    else ch.unlocked = isRead(CHAPTERS[i-1].id);
+    ch.read = isRead(ch.id);
+  });
+
+  renderChapterNav();
+  loadChapter(0);
+  renderDossier();
+  renderProgress();
+
+  document.getElementById('about-chap-count').textContent = CHAPTERS.length;
+  document.getElementById('about-dos-count').textContent = DOSSIERS.length;
+}
+
+// ============================================================
+// READER
+// ============================================================
+function renderChapterNav() {
+  const nav = document.getElementById('chapter-nav');
+  nav.innerHTML = CHAPTERS.map((ch, i) => `
+    <div class="chapter-item ${i === state.currentChapter ? 'active' : ''} ${!ch.unlocked ? 'locked' : ''}"
+         onclick="${ch.unlocked ? `jumpChapter(${i})` : 'void(0)'}">
+      <span class="chapter-num">${String(ch.id).padStart(2,'0')}.</span>
+      <span class="chapter-title">${ch.title}</span>
+    </div>
+  `).join('');
+}
+
+function loadChapter(idx) {
+  state.currentChapter = idx;
+  const ch = CHAPTERS[idx];
+
+  document.getElementById('page-label').textContent = `Глава ${toRoman(ch.id)}`;
+  document.getElementById('page-num').textContent = `стр. ${ch.pageNum}`;
+  document.getElementById('chap-title').textContent = ch.title;
+  document.getElementById('chap-epigraph').textContent = ch.epigraph;
+  document.getElementById('chap-text').innerHTML = ch.text;
+
+  const markBtn = document.getElementById('btn-mark');
+  if (ch.read) {
+    markBtn.textContent = '✓ Прочитано';
+    markBtn.disabled = true;
+  } else {
+    markBtn.textContent = 'Отметить прочитанным';
+    markBtn.disabled = false;
+  }
+
+  document.getElementById('btn-prev').disabled = idx === 0;
+  document.getElementById('btn-next').disabled = idx === CHAPTERS.length - 1 || !CHAPTERS[idx+1]?.unlocked;
+
+  renderChapterNav();
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+function jumpChapter(idx) {
+  if (CHAPTERS[idx].unlocked) loadChapter(idx);
+}
+
+function changeChapter(dir) {
+  const next = state.currentChapter + dir;
+  if (next >= 0 && next < CHAPTERS.length && CHAPTERS[next].unlocked) {
+    loadChapter(next);
+  }
+}
+
+function markRead() {
+  const ch = CHAPTERS[state.currentChapter];
+  if (!isRead(ch.id)) {
+    state.readChapters.push(ch.id);
+    localStorage.setItem('readChapters', JSON.stringify(state.readChapters));
+  }
+  // Unlock next chapter
+  const nextIdx = state.currentChapter + 1;
+  if (nextIdx < CHAPTERS.length) CHAPTERS[nextIdx].unlocked = true;
+
+  ch.read = true;
+  loadChapter(state.currentChapter);
+  renderDossier();
+  renderProgress();
+
+  // Show unlock notification if dossiers unlocked
+  if (ch.unlocksDossier && ch.unlocksDossier.length > 0) {
+    setTimeout(() => {
+      const names = ch.unlocksDossier.map(id => {
+        const d = DOSSIERS.find(x => x.id === id);
+        return d ? d.name : id;
+      });
+      alert(`🗂 Новые досье разблокированы:\n${names.join('\n')}`);
+    }, 200);
+  }
+}
+
+function toRoman(n) {
+  const vals = [1000,900,500,400,100,90,50,40,10,9,5,4,1];
+  const syms = ['M','CM','D','CD','C','XC','L','XL','X','IX','V','IV','I'];
+  let r = '';
+  vals.forEach((v,i) => { while(n >= v){ r += syms[i]; n -= v; } });
+  return r;
+}
+
+// ============================================================
+// DOSSIER
+// ============================================================
+function unlockedDossierIds() {
+  const readIds = state.readChapters;
+  const maxCh = maxReadChapter();
+  return DOSSIERS.filter(d => d.unlocksAfterChapter <= maxCh).map(d => d.id);
+}
+
+function renderDossier() {
+  const unlocked = unlockedDossierIds();
+  const total = DOSSIERS.length;
+  const count = unlocked.length;
+  const pct = Math.round(count / total * 100);
+
+  document.getElementById('dossier-count').textContent = `${count} / ${total} разблокировано`;
+  document.getElementById('unlock-fill').style.width = pct + '%';
+  document.getElementById('unlock-text').textContent = pct + '%';
+
+  const grid = document.getElementById('dossier-grid');
+  grid.innerHTML = DOSSIERS.map(d => {
+    const isUnlocked = unlocked.includes(d.id);
+    return `
+      <div class="dossier-card ${isUnlocked ? '' : 'locked'}" onclick="${isUnlocked ? `openDossier('${d.id}')` : 'void(0)'}">
+        <div class="dossier-card-top">
+          <span class="dossier-type">${d.type}</span>
+          <span class="dossier-id">${d.displayId}</span>
+        </div>
+        <div class="dossier-photo-area">
+          <div class="dossier-avatar">${isUnlocked ? d.emoji : '?'}</div>
+          ${!isUnlocked ? `<div class="locked-overlay"><span class="locked-badge">Заблокировано</span></div>` : ''}
+        </div>
+        <div class="dossier-body">
+          <div class="dossier-name">${isUnlocked ? d.name : '████████'}</div>
+          <div class="dossier-role">${isUnlocked ? d.role : '███████████████'}</div>
+          <div class="dossier-snippet">${isUnlocked ? (d.fields[0]?.value || '').slice(0,80) + '…' : 'Откройте доступ, читая книгу'}</div>
+        </div>
+      </div>
+    `;
+  }).join('');
+}
+
+function openDossier(id) {
+  const d = DOSSIERS.find(x => x.id === id);
+  if (!d) return;
+
+  document.getElementById('modal-title').textContent = `Досье ${d.displayId} — ${d.type}`;
+
+  const tags = d.tags.map(t => `<span class="modal-tag">${t}</span>`).join('');
+  const fields = d.fields.map(f => `
+    <div class="modal-field">
+      <div class="modal-field-label">${f.label}</div>
+      <div class="modal-field-value">${f.value}</div>
+    </div>
+  `).join('');
+
+  document.getElementById('modal-body').innerHTML = `
+    <div class="modal-dossier-top">
+      <div class="modal-avatar">${d.emoji}</div>
+      <div class="modal-info">
+        <div class="modal-name">${d.name}</div>
+        <div class="modal-role">${d.role}</div>
+        <div class="modal-tags">${tags}</div>
+      </div>
+    </div>
+    ${fields}
+  `;
+
+  document.getElementById('modal').classList.add('open');
+}
+
+function closeModal(e) {
+  if (e.target === document.getElementById('modal')) closeModalDirect();
+}
+function closeModalDirect() {
+  document.getElementById('modal').classList.remove('open');
+}
+
+// ============================================================
+// PROGRESS
+// ============================================================
+function renderProgress() {
+  const list = document.getElementById('progress-list');
+  list.innerHTML = CHAPTERS.map(ch => `
+    <div class="progress-chapter-item ${isRead(ch.id) ? 'read' : ''}" onclick="jumpToChapter(${CHAPTERS.indexOf(ch)})">
+      <div class="progress-chk">${isRead(ch.id) ? '✓' : ''}</div>
+      <div class="progress-ch-name">${ch.title}</div>
+      <div class="progress-ch-num">Гл. ${ch.id}</div>
+    </div>
+  `).join('');
+}
+
+function jumpToChapter(idx) {
+  if (CHAPTERS[idx].unlocked) {
+    switchTab('reader', document.querySelector('.tab-btn'));
+    setTimeout(() => loadChapter(idx), 100);
+  }
+}
+
+// ============================================================
+// TABS
+// ============================================================
+function switchTab(name, btn) {
+  document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
+  document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+  document.getElementById('sec-' + name).classList.add('active');
+  if (btn) btn.classList.add('active');
+}
+
+// ============================================================
+// START
+// ============================================================
+init();
+</script>
+</body>
+</html>
